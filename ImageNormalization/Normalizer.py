@@ -2,7 +2,6 @@ from scipy import misc
 import numpy as np
 
 
-
 def imageToArray(filename):
     mapScreenShot = misc.imread(filename)
     mapScreenShotArray = np.array(mapScreenShot)

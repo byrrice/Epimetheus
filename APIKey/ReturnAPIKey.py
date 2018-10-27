@@ -1,4 +1,4 @@
-def throwAPIKey():
-    key = 'AIzaSyBQlhqYJrFrZr3pifx2yAPRUkB9qb979d8'
+def getAPIKey():
+    key = ''
 
     return key

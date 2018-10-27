@@ -2,7 +2,11 @@ from PIL import Image
 from io import BytesIO
 import requests
 
+
 # Coordinates of the center of the image, and zoom based upon FOV and altitude of image
+from APIKey import ReturnAPIKey
+
+
 def getSatImage(coordLat, coordLong, zoom=18):
     URL = "https://maps.googleapis.com/maps/api/staticmap?"
     center = str(coordLat)+','+str(coordLong)

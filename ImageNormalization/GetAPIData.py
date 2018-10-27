@@ -5,7 +5,8 @@ from ImageNormalization import Normalizer as norm
 from ImageNormalization import GetLatLongFromPix as latLong
 
 
-def obstructionToLongLat(cameraImageFile, apiImageFile, latitudeBottom, latitudeTop, longitudeLeft, longitudeRight):
+def obstructionToLongLat(cameraImageFile, apiImageFile, latitudeBottom,
+        latitudeTop, longitudeLeft, longitudeRight):
     cameraImageArray = norm.imageToArray(cameraImageFile)
     apiImageArray = norm.imageToArray(apiImageFile)
 
@@ -56,9 +57,12 @@ def getRoadList(convertedArray):
 
     return roadList
 
-def doEverything(cameraImageFile, apiImageFile, latitudeBottom, latitudeTop, longitudeLeft, longitudeRight):
-    convertedArray = obstructionToLongLat(cameraImageFile, apiImageFile, latitudeBottom, latitudeTop, longitudeLeft, longitudeRight)
+
+def doEverything(cameraImageFile, apiImageFile, latitudeBottom, latitudeTop,
+        longitudeLeft, longitudeRight):
+    convertedArray = obstructionToLongLat(cameraImageFile, apiImageFile,
+                                          latitudeBottom, latitudeTop,
+                                          longitudeLeft, longitudeRight)
     roadList = getRoadList(convertedArray)
 
     return roadList
-

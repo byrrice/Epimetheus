@@ -1,5 +1,6 @@
 import numpy as np
 
+#legacy function
 def convertWorldToLongLat(worldCoordArray):
     longitude = np.subtract(
             np.multiply((np.divide(worldCoordArray[0], 256)), 360), 180)

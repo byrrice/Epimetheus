@@ -1,7 +1,7 @@
 from PIL import Image
 from io import BytesIO
 import requests
-import apiKey
+from ./APIKey import ReturnAPIKey
 
 # Coordinates of the center of the image, and zoom based upon FOV and altitude of image
 def getSatImage(coordLat, coordLong, zoom=18):
@@ -11,7 +11,7 @@ def getSatImage(coordLat, coordLong, zoom=18):
     size = '1080x1120'
     maptype = 'satellite'
 
-    key = apiKey.getKey()
+    key = ReturnAPIKey.getAPIKey()
     
     PARAMS = {'center':center,'zoom':zoom,'size':size,'maptype':maptype,'key':key}
     

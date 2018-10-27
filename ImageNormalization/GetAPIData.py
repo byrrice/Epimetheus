@@ -1,6 +1,6 @@
 import requests
 from APIKey import ReturnAPIKey as key
-from ImageNormalization import CoordinateConverter as convert
+import numpy as np
 from ImageNormalization import Normalizer as obstructionArray
 from ImageNormalization import GetLatLongFromPix as latLong
 
@@ -11,7 +11,7 @@ def obstructionToLongLat():
 
     for i in range(0, 1080):
         for j in range(0, 1080):
-            if diffArray[i][j] > 0:
+            if np.absolute(diffArray[i][j]) > 50:
                 convertedArray.append(
                         tuple((latLong.getLatFromPix(i, latitudeBottom,
                                                      latitudeTop),

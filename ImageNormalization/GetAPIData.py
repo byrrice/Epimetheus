@@ -1,6 +1,12 @@
 import requests
 from APIKey import ReturnAPIKey as key
 from ImageNormalization import CoordinateConverter as convert
+from ImageNormalization import GetLatLongFromPix as getLatLong
+
+def obstructionToLongLat():
+
+
+
 
 def getRoadAPIData(latLongArray):
 
@@ -25,3 +31,4 @@ def getPlaceAPIData(placeIDArray):
 
     roadName = data["result"]["formatted_address"]
     return roadName
+

@@ -12,3 +12,6 @@ def imageToArray(filename):
 def imageDiff(cameraImageArray, apiImageArray):
     diffArray = np.subtract(cameraImageArray, apiImageArray)
     return diffArray
+
+
+

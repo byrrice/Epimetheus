@@ -18,6 +18,6 @@ def getSatImage(coordLat, coordLong, zoom=18):
     img = Image.open(BytesIO(r.content))
     width, height = img.size
     img = img.crop((0,20,width,(height-20)))
-    fileName = '../Images/img1.png'
+    fileName = './Images/img1.png'
     img.save(fileName, 'PNG')
     return fileName

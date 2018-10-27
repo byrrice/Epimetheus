@@ -11,4 +11,4 @@ def run(centerLat, centerLong, droneImgPath):
     return getRoads.doEverything(satImgPath, droneImgPath, botlat, toplat, leftlong, rightlong)
 
 if __name__ == "__main__":
-    print(run(40.0065128,-83.03053321237,'../Images/img.png'))
+    print(run(40.0065128,-83.03053321237,'./Images/img.png'))

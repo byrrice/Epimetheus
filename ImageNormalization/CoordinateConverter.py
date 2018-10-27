@@ -20,7 +20,7 @@ def columnRatioFinder(longitudeLeft, longitudeRight):
 
     return ratio
 
-def rowRatioFinder(latitudeTop, latitudeBottom):
+def rowRatioFinder(latitudeBottom, latitudeTop):
     height = 1080
     latitudeDiff = np.subtract(latitudeTop, latitudeBottom)
     ratio = np.divide(latitudeDiff, height)

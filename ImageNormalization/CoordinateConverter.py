@@ -1,13 +1,5 @@
 import numpy as np
 
-
-def convertPixelToWorld(pixelCoordX, pixelCoordY, zoomLevel):
-    worldCoordX = np.multiply(pixelCoordX, np.power(2, -zoomLevel))
-    worldCoordY = np.multiply(pixelCoordY, np.power(2, -zoomLevel))
-
-    return [worldCoordX, worldCoordY]
-
-
 def convertWorldToLongLat(worldCoordArray):
     longitude = np.subtract(
             np.multiply((np.divide(worldCoordArray[0], 256)), 360), 180)
@@ -20,3 +12,20 @@ def convertWorldToLongLat(worldCoordArray):
                         np.subtract(np.exp(insideFunc), np.exp(-insideFunc))))
 
     return [latitude, longitude]
+
+def columnRatioFinder(longitudeLeft, longitudeRight):
+    width = 1080
+    longitudeDiff = np.subtract(longitudeRight, longitudeLeft)
+    ratio = np.divide(longitudeDiff, width)
+
+    return ratio
+
+def rowRatioFinder(latitudeTop, latitudeBottom):
+    height = 1080
+    latitudeDiff = np.subtract(latitudeTop, latitudeBottom)
+    ratio = np.divide(latitudeDiff, height)
+
+    return ratio
+
+
+

@@ -9,15 +9,15 @@ def getSatImage(coordLat, coordLong, zoom=18):
     URL = "https://maps.googleapis.com/maps/api/staticmap?"
     center = str(coordLat)+','+str(coordLong)
     # Crop out top and bottom 20 pixels to keep image centered
-    size = '1080x1120'
+    size = '1240x1280'
     maptype = 'satellite'
     key = ''
-    PARAMS = {'center':center,'zoom':zoom,'size':size,'maptype':maptype,'key':key}
+    PARAMS = {'center':center,'zoom':zoom,'size':size,'maptype':maptype,'key':key, 'scale':2}
     
     r = requests.get(url=URL, params=PARAMS)
     img = Image.open(BytesIO(r.content))
     width, height = img.size
     img = img.crop((0,20,width,(height-20)))
-    fileName = 'Images\img1.png'
+    fileName = '../Images/img1.png'
     img.save(fileName, 'PNG')
     return fileName

@@ -15,14 +15,14 @@ def convertWorldToLongLat(worldCoordArray):
     return [latitude, longitude]
 
 def columnRatioFinder(longitudeLeft, longitudeRight):
-    width = 1080
+    width = 1240
     longitudeDiff = np.subtract(longitudeRight, longitudeLeft)
     ratio = np.divide(longitudeDiff, width)
 
     return ratio
 
 def rowRatioFinder(latitudeBottom, latitudeTop):
-    height = 1080
+    height = 1240
     latitudeDiff = np.subtract(latitudeTop, latitudeBottom)
     ratio = np.divide(latitudeDiff, height)
 

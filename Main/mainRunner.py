@@ -8,5 +8,7 @@ def run(centerLat, centerLong, droneImgPath):
     toplat, botlat, leftlong, rightlong = coordinatesToImageLatLong(centerLat, centerLong)
     satImgPath = getSatImage(centerLat, centerLong, 18)
 
-    getRoads.doEverything(satImgPath, droneImgPath, botlat, toplat, leftlong, rightlong)
+    return getRoads.doEverything(satImgPath, droneImgPath, botlat, toplat, leftlong, rightlong)
 
+if __name__ == "__main__":
+    print(run(40.0065128,-83.03053321237,'../Images/img.png'))

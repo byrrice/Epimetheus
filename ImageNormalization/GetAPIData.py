@@ -12,10 +12,10 @@ def obstructionToLongLat(cameraImageFile, apiImageFile, latitudeBottom,
 
     diffArray = norm.imageDiff(cameraImageArray, apiImageArray)
     convertedArray = []
-
-    for i in range(0, 1080):
-        for j in range(0, 1080):
-            if np.absolute(diffArray[i][j]) > 50:
+    print(np.shape(diffArray))
+    for i in range(0, 1240):
+        for j in range(0, 1240):
+            if abs(diffArray[i,j,0]) > 50 or abs(diffArray[i,j,1]) > 50 or abs(diffArray[i,j,2]) > 50:
                 convertedArray.append(
                         tuple((latLong.getLatFromPix(i, latitudeBottom,
                                                      latitudeTop),
@@ -52,7 +52,7 @@ def getPlaceAPIData(placeIDArray):
 def getRoadList(convertedArray):
     roadList = []
 
-    for i in range(0, convertedArray.length):
+    for i in range(0, len(convertedArray)):
         roadList.append(getPlaceAPIData(getRoadAPIData(convertedArray[i])))
 
     return roadList

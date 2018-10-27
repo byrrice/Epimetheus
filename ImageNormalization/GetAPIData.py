@@ -8,9 +8,9 @@ def obstructionToLongLat():
 
 
 
-def getRoadAPIData(latLongArray):
+def getRoadAPIData(latitude, longitude):
 
-    parameters = "points=" + latLongArray[0] + "," + latLongArray[1]
+    parameters = "points=" + latitude + "," + longitude
     apikey = "&key=" + key.throwAPIKey()
     url = "https://roads.googleapis.com/v1/nearestRoads?" + parameters + apikey
 

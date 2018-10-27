@@ -1,12 +1,15 @@
 import requests
 from APIKey import ReturnAPIKey as key
 import numpy as np
-from ImageNormalization import Normalizer as obstructionArray
+from ImageNormalization import Normalizer as norm
 from ImageNormalization import GetLatLongFromPix as latLong
 
 
-def obstructionToLongLat():
-    diffArray = obstructionArray.imageDiff()
+def obstructionToLongLat(cameraImageFile, apiImageFile, latitudeBottom, latitudeTop, longitudeLeft, longitudeRight):
+    cameraImageArray = norm.imageToArray(cameraImageFile)
+    apiImageArray = norm.imageToArray(apiImageFile)
+
+    diffArray = norm.imageDiff(cameraImageArray, apiImageArray)
     convertedArray = []
 
     for i in range(0, 1080):
@@ -52,3 +55,10 @@ def getRoadList(convertedArray):
         roadList.append(getPlaceAPIData(getRoadAPIData(convertedArray[i])))
 
     return roadList
+
+def doEverything(cameraImageFile, apiImageFile, latitudeBottom, latitudeTop, longitudeLeft, longitudeRight):
+    convertedArray = obstructionToLongLat(cameraImageFile, apiImageFile, latitudeBottom, latitudeTop, longitudeLeft, longitudeRight)
+    roadList = getRoadList(convertedArray)
+
+    return roadList
+

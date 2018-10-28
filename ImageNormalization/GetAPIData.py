@@ -47,9 +47,10 @@ def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeB
 
 def getRoadPixels(roadImageFile):
     roadImageArray = norm.imageToArray(roadImageFile)
-    flatArray = np.sum(roadImageArray,2)
+    print(np.shape(roadImageArray))
+    flatArray = np.sum(roadImageArray, 2)
     print(flatArray)
-    return np.where(flatArray > 762, 1, 0)
+    return np.where(flatArray >= 762, 1, 0)
 
 def batchGetRoadAPIData(pointsToCheck):
     roadMap = {}

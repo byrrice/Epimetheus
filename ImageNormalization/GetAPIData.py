@@ -74,7 +74,7 @@ def getNeighbors(r, c, rows, cols):
     for i in range(-1,2):
         for j in range(-1,2):
             if(i != 0 and j != 0 and (r+i) >= 0 and (r+i) < rows and (c+i) >= 0 and (c+i) < cols):
-                neighbors.append((i,j))
+                neighbors.append((i+r,j+c))
     return neighbors
 
 def getRoadPixels(roadImageFile):

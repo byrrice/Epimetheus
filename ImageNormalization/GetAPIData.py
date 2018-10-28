@@ -127,12 +127,11 @@ def getRoadAPIData(points):
     url = "https://roads.googleapis.com/v1/nearestRoads?"
     response = requests.get(url, params=parameters)
     data = response.json()
-    # print(data)
+    print(data)
     placeIDs = []
     for snappedPoint in data['snappedPoints']:
         placeIDs.append(snappedPoint["placeId"])
-
-    return placeIDs
+    return placeIDs[0:len(points)]
 
 
 def getPlaceAPIData(placeID):

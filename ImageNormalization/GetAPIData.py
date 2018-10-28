@@ -44,6 +44,7 @@ def findGroups(obstructionsOnRoads):
     for i in range(rows):
         for j in range(cols):
             dfs(i, j, obstructionsOnRoads, visited)
+
 def dfs(r, c, obstructionsOnRoads, visited, groups, count):
     if(visited[r, c] != 0):
         return

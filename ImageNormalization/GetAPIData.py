@@ -36,6 +36,21 @@ def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeB
 
     return pointsToCheck
 
+def findGroups(obstructionsOnRoads):
+    visited = np.zeros(np.shape(obstructionsOnRoads))
+    rows = np.size(obstructionsOnRoads, 0)
+    cols = np.size(obstructionsOnRoads, 1)
+    groups = {}
+    for i in range(rows):
+        for j in range(cols):
+            dfs(i, j, obstructionsOnRoads, visited)
+def dfs(r, c, obstructionsOnRoads, visited, groups, count):
+    if(visited[r, c] != 0):
+        return
+
+    if obstructionsOnRoads[r,c] != 0:
+        visited[r,c] = count+1
+
 def getRoadPixels(roadImageFile):
     roadImageArray = norm.imageToArray(roadImageFile)
     print(np.shape(roadImageArray))

@@ -1,4 +1,4 @@
-# Hack Oh/io Submission 2018
+# Epimetheus
 
 ## By: Rahul Pokharna, Alexander Telich, Sibi Sengottuvel, Isaac Ng
 

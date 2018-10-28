@@ -4,6 +4,7 @@ from scipy import misc
 import numpy as np
 from ImageNormalization import Normalizer as norm
 from ImageNormalization import GetLatLongFromPix as latLong
+from multiprocessing.pool import ThreadPool
 
 
 def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeBottom,
@@ -92,8 +93,10 @@ def batchGetRoadAPIData(pointsToCheck):
         for i in range(0, len(pointsToCheck), 100):
             count = min(i+100, len(pointsToCheck))
             placeIDs = getRoadAPIData(pointsToCheck[i:count])
+            pool = ThreadPool(processes=len(placeIDs))
             for j, placeID in enumerate(placeIDs):
-                roadName = getPlaceAPIData(placeID)
+                async_result = pool.apply_async(getPlaceAPIData, [placeID])
+                roadName = async_result.get()
                 if roadName in roadMap:
                     roadMap[roadName].append(pointsToCheck[i+j])
                 else:

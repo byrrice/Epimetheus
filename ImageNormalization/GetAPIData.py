@@ -26,25 +26,22 @@ def obstructionToLongLat(cameraImageFile, apiImageFile, latitudeBottom,
 
 
 def getRoadAPIData(latLong):
-    parameters = "points=" + latLong[0] + "," + latLong[1]
-    apikey = "&key=" + key.getAPIKey()
-    url = "https://roads.googleapis.com/v1/nearestRoads?" + parameters + apikey
-
-    response = requests.get(url)
-    data = response.json
-
-    placeID = data["placeId"]
+    parameters = {'points': str(round(latLong[0], 3)) + "," + str(round(latLong[1],3)), 'key': key.getAPIKey()}
+    url = "https://roads.googleapis.com/v1/nearestRoads?"
+    response = requests.get(url, params=parameters)
+    data = response.json()
+    # print(data)
+    placeID = data['snappedPoints'][0]["placeId"]
     return placeID
 
 
 def getPlaceAPIData(placeIDArray):
-    apikey = "&key=" + key.getAPIKey()
-    parameters = "json?placeID=" + placeIDArray
-    url = "https://maps.googleapis.com/maps/api/place/details/"
+    url = "https://maps.googleapis.com/maps/api/place/details/json"
+    parameters = {'placeid' : placeIDArray, 'key' : key.getAPIKey()}
 
-    response = requests.get(url)
-    data = response.json
-
+    response = requests.get(url, parameters)
+    data = response.json()
+    # print(data)
     roadName = data["result"]["formatted_address"]
     return roadName
 

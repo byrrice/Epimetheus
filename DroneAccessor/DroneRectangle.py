@@ -4,7 +4,9 @@ def coordinatesToImageLatLong(centerLat, centerLong, zoom=18):
     #returns toplat, botlat, leftlong, rightlong
     metersPerPx = 156543.03392 * math.cos(centerLat * math.pi / 180) / math.pow(2, zoom)
     lats = getLats(centerLat, metersPerPx)
-    longs = getLongs(centerLat, centerLong, metersPerPx)
+    # longs = getLongs(centerLat, centerLong, metersPerPx)
+    longs = getLats(centerLong, metersPerPx) #hack
+    print([lats[1], lats[0], longs[0], longs[1]])
     return lats[1], lats[0], longs[0], longs[1]
 
 def getLongs(centerLat, centerLong, metersFrom):

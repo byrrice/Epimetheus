@@ -6,7 +6,7 @@ def imageToArray(filename):
     mapScreenShot = misc.imread(filename)
     mapScreenShotArray = np.array(mapScreenShot)
 
-    return mapScreenShotArray
+    return mapScreenShotArray[:,:,0:3]
 
 
 def imageDiff(cameraImageArray, apiImageArray):

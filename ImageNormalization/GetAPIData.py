@@ -13,16 +13,7 @@ def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeB
 
     diffArray = norm.imageDiff(cameraImageArray, apiImageArray)
     roadArray = getRoadPixels(roadImageFile)
-    # convertedArray = []
     print(np.shape(diffArray))
-    # for i in range(0, 1240):
-    #     for j in range(0, 1240):
-    #         if abs(diffArray[i,j,0]) > 50 or abs(diffArray[i,j,1]) > 50 or abs(diffArray[i,j,2]) > 50:
-    #             convertedArray.append(
-    #                     tuple((latLong.getLatFromPix(i, latitudeBottom,
-    #                                                  latitudeTop),
-    #                            latLong.getLongFromPix(j, longitudeLeft,
-    #                                                   longitudeRight))))
 
     diffBinary = np.where(diffArray > 50, 1, 0)
     obstructions = np.where(np.sum(diffBinary, 2) >= 1, 1, 0)

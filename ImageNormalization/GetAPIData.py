@@ -18,6 +18,7 @@ def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeB
     diffBinary = np.where(diffArray > 50, 1, 0)
     obstructions = np.where(np.sum(diffBinary, 2) >= 1, 1, 0)
     obstructionsOnRoads = np.where(roadArray + obstructions == 2, 1,0)
+    
 
     #make new map with obstruction on it.
     newRoadMap = misc.imread(roadImageFile)
@@ -28,29 +29,53 @@ def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeB
     newRoadArray[:,:,2] = np.where(obstructionsOnRoads == 1, 0, newRoadArray[:,:,2])
     misc.imsave('./Images/labeledObstructions.png', newRoadArray)
 
-    pointsToCheck = []
-    for i in range(1180):
-        for j in range(1180):
-            if obstructionsOnRoads[i,j] == 1:
-                pointsToCheck.append((latLong.getLatFromPix(i, latitudeBottom, latitudeTop), latLong.getLongFromPix(j, longitudeLeft, longitudeRight)))
+    pointsToCheck = findGroups(obstructionsOnRoads)
+    # print(pointsToCheck)
+    coordsToCheck = []
+    for i,j in pointsToCheck:
+        coordsToCheck.append((latLong.getLatFromPix(i, latitudeBottom, latitudeTop), latLong.getLongFromPix(j, longitudeLeft, longitudeRight)))
+    # for i in range(1180):
+    #     for j in range(1180):
+    #         if obstructionsOnRoads[i,j] == 1:
+    #             pointsToCheck.append((latLong.getLatFromPix(i, latitudeBottom, latitudeTop), latLong.getLongFromPix(j, longitudeLeft, longitudeRight)))
 
-    return pointsToCheck
+    return coordsToCheck
 
 def findGroups(obstructionsOnRoads):
     visited = np.zeros(np.shape(obstructionsOnRoads))
     rows = np.size(obstructionsOnRoads, 0)
     cols = np.size(obstructionsOnRoads, 1)
-    groups = {}
+    groups = []
+    count = 0
     for i in range(rows):
         for j in range(cols):
-            dfs(i, j, obstructionsOnRoads, visited)
+            if(obstructionsOnRoads[i,j] == 1 and visited[i,j] == 0):
+                count += 1
+                groups.append((i,j))
+                dfs(i, j, obstructionsOnRoads, visited, count)
+    print(visited)
+    return groups
 
-def dfs(r, c, obstructionsOnRoads, visited, groups, count):
+def dfs(r, c, obstructionsOnRoads, visited, count):
     if(visited[r, c] != 0):
         return
+    if obstructionsOnRoads[r,c] == 0:
+        return
 
-    if obstructionsOnRoads[r,c] != 0:
-        visited[r,c] = count+1
+    visited[r,c] = count
+    
+    # Returns the set of all valid points that neighbor the current point
+    pts = getNeighbors(r, c, np.size(visited, 0), np.size(visited, 1))
+    for i,j in pts:
+        dfs(i,j,obstructionsOnRoads,visited,count)
+
+def getNeighbors(r, c, rows, cols):
+    neighbors = []
+    for i in range(-1,2):
+        for j in range(-1,2):
+            if(i != 0 and j != 0 and (r+i) >= 0 and (r+i) < rows and (c+i) >= 0 and (c+i) < cols):
+                neighbors.append((i+r,j+c))
+    return neighbors
 
 def getRoadPixels(roadImageFile):
     roadImageArray = norm.imageToArray(roadImageFile)
@@ -99,7 +124,7 @@ def getRoadAPIData(points):
     url = "https://roads.googleapis.com/v1/nearestRoads?"
     response = requests.get(url, params=parameters)
     data = response.json()
-    print(data)
+    # print(data)
     placeIDs = []
     for snappedPoint in data['snappedPoints']:
         placeIDs.append(snappedPoint["placeId"])

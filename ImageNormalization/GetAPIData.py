@@ -5,6 +5,7 @@ import numpy as np
 from ImageNormalization import Normalizer as norm
 from ImageNormalization import GetLatLongFromPix as latLong
 from multiprocessing.pool import ThreadPool
+import sys
 
 
 def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeBottom,
@@ -43,6 +44,7 @@ def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeB
     return coordsToCheck
 
 def findGroups(obstructionsOnRoads):
+    sys.setrecursionlimit(1500)
     visited = np.zeros(np.shape(obstructionsOnRoads))
     rows = np.size(obstructionsOnRoads, 0)
     cols = np.size(obstructionsOnRoads, 1)

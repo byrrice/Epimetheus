@@ -17,7 +17,9 @@ if __name__ == "__main__":
     # print(run(39.9959124,-82.9981831,'./Images/testImage2.png'))
     # print("Done 2")
     # input()
-    print(run(39.8582479,-83.2199184,'./Images/testImage3.png'))
+    # print(run(39.8582479,-83.2199184,'./Images/testImage3.png'))
     # print("Done 3")
     # input()
     # print(run(39.8512809,-83.1647455,'./Images/testImage4.png'))
+    # input()
+    print(run(39.8260985,-83.1544944,'./Images/testImage5.png')) # 39.8260985,-83.1544944

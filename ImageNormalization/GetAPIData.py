@@ -1,43 +1,107 @@
 import requests
 from APIKey import ReturnAPIKey as key
+from scipy import misc
 import numpy as np
 from ImageNormalization import Normalizer as norm
 from ImageNormalization import GetLatLongFromPix as latLong
 
 
-def obstructionToLongLat(cameraImageFile, apiImageFile, latitudeBottom,
+def obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile, latitudeBottom,
         latitudeTop, longitudeLeft, longitudeRight):
     cameraImageArray = norm.imageToArray(cameraImageFile)
     apiImageArray = norm.imageToArray(apiImageFile)
 
     diffArray = norm.imageDiff(cameraImageArray, apiImageArray)
-    convertedArray = []
+    roadArray = getRoadPixels(roadImageFile)
+    # convertedArray = []
     print(np.shape(diffArray))
-    for i in range(0, 1240):
-        for j in range(0, 1240):
-            if abs(diffArray[i,j,0]) > 50 or abs(diffArray[i,j,1]) > 50 or abs(diffArray[i,j,2]) > 50:
-                convertedArray.append(
-                        tuple((latLong.getLatFromPix(i, latitudeBottom,
-                                                     latitudeTop),
-                               latLong.getLongFromPix(j, longitudeLeft,
-                                                      longitudeRight))))
+    # for i in range(0, 1240):
+    #     for j in range(0, 1240):
+    #         if abs(diffArray[i,j,0]) > 50 or abs(diffArray[i,j,1]) > 50 or abs(diffArray[i,j,2]) > 50:
+    #             convertedArray.append(
+    #                     tuple((latLong.getLatFromPix(i, latitudeBottom,
+    #                                                  latitudeTop),
+    #                            latLong.getLongFromPix(j, longitudeLeft,
+    #                                                   longitudeRight))))
 
-    return convertedArray
+    diffBinary = np.where(diffArray > 50, 1, 0)
+    obstructions = np.where(np.sum(diffBinary, 2) >= 1, 1, 0)
+    obstructionsOnRoads = np.where(roadArray + obstructions == 2, 1,0)
 
+    #make new map with obstruction on it.
+    newRoadMap = misc.imread(roadImageFile)
+    newRoadArray = np.array(newRoadMap)
 
-def getRoadAPIData(latLong):
-    parameters = {'points': str(round(latLong[0], 3)) + "," + str(round(latLong[1],3)), 'key': key.getAPIKey()}
+    newRoadArray[:,:,0] = np.where(obstructionsOnRoads == 1, 255, newRoadArray[:,:,0])
+    newRoadArray[:,:,1] = np.where(obstructionsOnRoads == 1, 0, newRoadArray[:,:,1])
+    newRoadArray[:,:,2] = np.where(obstructionsOnRoads == 1, 0, newRoadArray[:,:,2])
+    misc.imsave('./Images/labeledObstructions.png', newRoadArray)
+
+    pointsToCheck = []
+    for i in range(1180):
+        for j in range(1180):
+            if obstructionsOnRoads[i,j] == 1:
+                pointsToCheck.append((latLong.getLatFromPix(i, latitudeBottom, latitudeTop), latLong.getLongFromPix(j, longitudeLeft, longitudeRight)))
+
+    return pointsToCheck
+
+def getRoadPixels(roadImageFile):
+    roadImageArray = norm.imageToArray(roadImageFile)
+    flatArray = np.sum(roadImageArray,2)
+    print(flatArray)
+    return np.where(flatArray > 762, 1, 0)
+
+def batchGetRoadAPIData(pointsToCheck):
+    roadMap = {}
+    if len(pointsToCheck) == 0:
+        return roadMap
+    if len(pointsToCheck) >= 100:
+        for i in range(0, len(pointsToCheck), 100):
+            count = min(i+100, len(pointsToCheck))
+            placeIDs = getRoadAPIData(pointsToCheck[i:count])
+            for j, placeID in enumerate(placeIDs):
+                roadName = getPlaceAPIData(placeID)
+                if roadName in roadMap:
+                    roadMap[roadName].append(pointsToCheck[i+j])
+                else:
+                    roadMap[roadName] = [pointsToCheck[i+j]]
+
+    leftoverCount = len(pointsToCheck) % 100
+    if leftoverCount == 0:
+        return roadMap
+
+    placeIDs = getRoadAPIData(pointsToCheck[len(pointsToCheck)-leftoverCount: len(pointsToCheck)])
+    i = len(pointsToCheck)-leftoverCount
+    for j, placeID in enumerate(placeIDs):
+        roadName = getPlaceAPIData(placeID)
+        if roadName in roadMap:
+            roadMap[roadName].append(pointsToCheck[i + j])
+        else:
+            roadMap[roadName] = [pointsToCheck[i + j]]
+
+    return roadMap
+
+def getRoadAPIData(points):
+    pointStrings = []
+    for point in points:
+        s = str(point[0]) + "," + str(point[1])
+        pointStrings.append(s)
+    pointsParam = "|".join(pointStrings)
+    parameters = {'points': pointsParam, 'key': key.getAPIKey()}
     url = "https://roads.googleapis.com/v1/nearestRoads?"
     response = requests.get(url, params=parameters)
     data = response.json()
-    # print(data)
-    placeID = data['snappedPoints'][0]["placeId"]
-    return placeID
+    print(data)
+    placeIDs = []
+    for snappedPoint in data['snappedPoints']:
+        placeIDs.append(snappedPoint["placeId"])
+
+    return placeIDs
 
 
-def getPlaceAPIData(placeIDArray):
+def getPlaceAPIData(placeID):
     url = "https://maps.googleapis.com/maps/api/place/details/json"
-    parameters = {'placeid' : placeIDArray, 'key' : key.getAPIKey()}
+    parameters = {'placeid' : placeID, 'key' : key.getAPIKey()}
 
     response = requests.get(url, parameters)
     data = response.json()
@@ -55,11 +119,10 @@ def getRoadList(convertedArray):
     return roadList
 
 
-def doEverything(cameraImageFile, apiImageFile, latitudeBottom, latitudeTop,
+def doEverything(cameraImageFile, apiImageFile, roadImageFile, latitudeBottom, latitudeTop,
         longitudeLeft, longitudeRight):
-    convertedArray = obstructionToLongLat(cameraImageFile, apiImageFile,
+    pointsTocheck = obstructionToLongLat(cameraImageFile, apiImageFile, roadImageFile,
                                           latitudeBottom, latitudeTop,
                                           longitudeLeft, longitudeRight)
-    roadList = getRoadList(convertedArray)
-
-    return roadList
+    roadObstructionMap = batchGetRoadAPIData(pointsTocheck)
+    return roadObstructionMap

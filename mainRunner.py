@@ -6,9 +6,9 @@ from ImageNormalization import GetAPIData as getRoads
 def run(centerLat, centerLong, droneImgPath):
     #TODO calculate correct altitude
     toplat, botlat, leftlong, rightlong = coordinatesToImageLatLong(centerLat, centerLong)
-    satImgPath = getSatImage(centerLat, centerLong, 18)
+    satImgPath, roadImgPath = getSatImage(centerLat, centerLong, 18)
 
-    return getRoads.doEverything(satImgPath, droneImgPath, botlat, toplat, leftlong, rightlong)
+    return getRoads.doEverything(satImgPath, droneImgPath, roadImgPath, botlat, toplat, leftlong, rightlong)
 
 if __name__ == "__main__":
     print(run(40.0065128,-83.03053321237,'./Images/img.png'))

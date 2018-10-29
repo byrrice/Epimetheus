@@ -1,9 +1,8 @@
 # Overview 
 
-## By: Rahul Pokharna, Alexander Telich, Sibi Sengottuvel, Isaac Ng
+Finalist at Hack Ohi/o 2018: http://hack.osu.edu/2018/live/winners.html
 
-### Finalist at Hack Ohi/o 2018
-http://hack.osu.edu/2018/live/winners.html
+## Made By: Rahul Pokharna, Alexander Telich, Sibi Sengottuvel, Isaac Ng
 
 ### JPG Morgan Disaster Relief Challenge
 
